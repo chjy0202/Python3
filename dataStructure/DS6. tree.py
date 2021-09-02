@@ -46,6 +46,5 @@ BST.insert(0)
 BST.insert(6)
 BST.insert(3)
 
-BST.search(6)
- 
+# print(BST.search(6))
 
