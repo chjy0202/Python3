@@ -1,166 +1,138 @@
-# 노트생성
-from typing import ChainMap
+# 최대값과 최소값을 빠르게 찾기 위해 고안된 완전이진트리 (왼쪽부터 채워나간다)
+# O(logn)의 시간이 소요됨.
 
+# 부모노드는 항상 자식노드보다 크거나 같다. (최대힙)=> 최대값은 루트노드.
+# 왼쪽, 오른쪽 자식노드 중에 무엇이 큰 값인지 모름
 
-class Node:
-  def __init__(self,value):
-    self.value = value
-    self.left = None
-    self.right = None
+# 이진탐색 트리는 탐색을 위한 트리, 힙은 최대/최솟값 검색을 위한 트리.
 
-# 이진탐색트리
-class NodeMgmt:
-  def __init__(self,head):
-    self.head = head # 루트 노드
+# 데이터를 삽입할 때는 왼쪽부터 차례차레 채워나간다
+# 부모보다 큰 수가 들어와도 우선은 데이터를 넣고 위의 부모노드와 비교해 가며 swap한다. 이 과정을 반복한다.
 
-  def insert(self,value):
-    self.current_node = self.head
-    while True:
-      if value < self.current_node.value:
-        if self.current_node.left != None:
-          self.current_node = self.current_node.left
-        else:
-          self.current_node.left = Node(value) # 왼쪽에 없으면 생성
-          break
-      else:
-        if self.current_node.right != None:
-          self.current_node = self.current_node.right
-        else:
-          self.current_node.right = Node(value) # 오른쪽에 없으면 생성
-          break
-    
-  # 서치코드
-  def search(self,value):
-    self.current_node = self.head
-    while self.current_node:
-      if self.current_node.value == value:
-        return True
-      elif self.current_node.value > value:
-        self.current_node = self.current_node.left
-      else:
-        self.current_node = self.current_node.right
-    return False
+# 데이터를 삭제할 때는 대부분 root node가 삭제된다
+# 이때는 마지막에 추가된 node를 root로 올린다
+# 그리고 이후에 아래 자식노드 중 더 큰 수와 swap한다. 이 과정을 반복한다.
 
+# 부모노드의 인덱스 번호 = 자식노드의 인덱스 번호 // 2 (몫)
+# 왼쪽은 부모노드의 인덱스 번호 * 2
+# 오른쪽은 인덱스 번호 * 2 + 1
 
-# 이진탐색트리 삭제 
-# leaf Node삭제
-# child Node가 하나일때 (branch가 1개 일때)
-# branch가 2개 일때 
-# - 삭제할 node의 오른쪽 자식 중, 가장 작은 값을 삭제할 node의 parant Node가 가리키도록 한다.
-# 1. 삭제할 node의 오른쪽 자식 선택
-# 2. 오른쪽 자식의 가장 왼쪽에 있는 node 선택
-# 3. 해당 node를 삭제할 node의 parent node 의 오른쪽/왼쪽 branch가 가리키게 함
-# 4. 해당 node의 왼쪽 branch가 삭제할 node의 왼쪽 child node를 가리키게 함
-# 5. 해당 node의 오른쪽 branch가 삭제할 node의 오른쪽 child node를 가리키게 함
-# 6. 만약 해당 node가 오른 쪽 child node를 가지고 있었을 경우에는 , 해당 node의 본래 parent node의 왼쪽 branch로 연결
-# - ( 삭제할 노드의 왼쪽 자식 중, 가장 큰 값을 올린다. )
+class Heap:
+  def __init__(self, data):
+    self.heap_array = list()
+    self.heap_array.append(None)  # 편하게 처음인덱스를 0아니고 1로 하고 싶어서
+    self.heap_array.append(data)
 
-
-  # 삭제코드
-  def delete(self,value):
-    searched = False
-    self.current_node = self.head
-    self.parent = self.head
-    while self.current_node:
-      if self.current_node.value == value:
-        searched = True
-        break
-      elif self.current_node.value > value:
-        self.parent = self.current_node
-        self.current_node = self.current_node.left
-      else:
-        self.parent = self.current_node
-        self.current_node = self.current_node.right
-    if searched == False:
+  def move_up(self, inserted_idx):
+    # 부모보다 커서 바꿔야 하는지 판단하는 method.
+    if inserted_idx <= 1:
       return False
-    
-    # 이후부터 케이스를 분리해서 코드 작성
+    parent_idx = inserted_idx // 2
+    if self.heap_array[parent_idx] < self.heap_array[inserted_idx]:
+      return True
+    else:
+      return False
 
-    # 리프노드일때
-    if self.current_node.left == None and self.current_node.right == None:
-      if value < self.parent.value:
-        self.parent.left = None
-      else:
-        self.parent.right = None
-      del self.current_node
-    # branch가 1개 일때
-    elif self.current_node.left != None and self.current_node.right == None:
-      if value < self.parent.value:
-        self.parent.left = self.current_node.left
-      else:
-        self.parent.right = self.current_node.left
-    elif self.current_node.left == None and self.current_node.right != None:
-      if value < self.parent.value:
-        self.parent.left = self.current_node.right
-      else:
-        self.parent.right = self.current_node.right
-    # 브렌치가 2개 일때 (삭제할 노드가 parent 의 왼쪽에 있는지 오른쪽에 있는지 나눠서)
-    # 왼쪽에 있을 때
-    elif self.current_node.left != None and self.current_node.right != None:
-      if value < self.parent.value:
-        self.change_node = self.current_node.right
-        self.change_node_parent = self.current_node.right
-        while self.change_node.left:
-          self.change_node_parent = self.change_node
-          self.change_node = self.change_node.left
-        if self.change_node.right != None:
-          self.change_node_parent.left = self.change_node.right
-        else:
-          self.change_node_parent.left = None
-        self.parent.left = self.change_node
-        self.change_node.left = self.current_node.left
-        self.change_node.right = self.current_node.right
-      # 오른쪽에 있을 때
-      else:
-        self.change_node = self.current_node.right
-        self.change_node_parent = self.current_node.right
-        while self.change_node.left:
-          self.change_node_parent = self.change_node
-          self.change_node = self.change_node.left
-        if self.change_node.right != None:
-          self.change_node_parent.left = self.change_node.right
-        else:
-          self.change_node_parent.left = None
-        self.parent.right = self.change_node
-        self.change_node.left = self.current_node.left
-        self.change_node.right = self.current_node.right
-    
+  def insert(self, data):
+    if len(self.heap_array) == 0:
+      self.heap_array.append(None)
+      self.heap_array.append(data)
+      return True
+
+    self.heap_array.append(data)
+    # 들어간 노드가 상위 부모 노드보다 값이 클때
+    # 인덱스번호. 우리는 인덱스0은 none으로 두고 1부터 보고 있기 때문
+    inserted_idx = len(self.heap_array) - 1
+
+    while self.move_up(inserted_idx):
+      parent_idx = inserted_idx // 2
+      self.heap_array[parent_idx], self.heap_array[inserted_idx] = self.heap_array[inserted_idx], self.heap_array[parent_idx]
+      inserted_idx = parent_idx  # 원래 노드가 부모 노드로 바꼈기 때문
+
     return True
 
-head = Node(1)
-BST = NodeMgmt(head)
-BST.insert(2)
-BST.insert(0)
-BST.insert(6)
-BST.insert(3)
+  # 삭제하는 코드
+  def move_down(self, popped_idx):
+    left_child_popped_idx = popped_idx * 2
+    right_child_popped_idx = popped_idx * 2 + 1
+    # 양쪽 모두 데이터가 있는 경우, 왼쪽만 있는 경우, 둘 다 없는 경우
+    # 둘다 없는 경우
+    if left_child_popped_idx >= len(self.heap_array):
+      return False
+    # 왼쪽만 있는 경우
+    elif right_child_popped_idx >= len(self.heap_array):
+      if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+        return True
+      else:
+        return False
+    # 모두 있는 경우
+    else:
+      if self.heap_array[left_child_popped_idx] > self.heap_array[right_child_popped_idx]:
+        if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+          return True
+        else:
+          return False
+      else:
+        if self.heap_array[right_child_popped_idx] > self.heap_array[popped_idx]:
+          return True
+        else:
+          return False
 
-BST.search(6)
+    # if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+    #   self.heap_array[left_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_popped_idx]
+    #   popped_idx = left_child_popped_idx    
+    # elif self.heap_array[right_child_popped_idx] > self.heap_array[popped_idx]:
+    #   self.heap_array[right_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[right_child_popped_idx]
+    #   popped_idx = right_child_popped_idx  
+    # else:
+    #   return False
 
-# 1-1000 숫자 중에서 임의로 100개를 추출해서 이진 탐색 트리에 입력, 검색, 삭제
-import random
+  def pop(self):
+    if len(self.heap_array) <= 1:
+      return None
 
-bst_nums = set() # 집합(중복없음)
-while len(bst_nums) != 100:
-  bst_nums.add(random.randint(0,999))
+    returned_data = self.heap_array[1] # 0은 비워놓고 1번으로 루트를 저장했기 때문에
+    self.heap_array[1] = self.heap_array[-1] # 마지막꺼 올려주기
+    del self.heap_array[-1]
+    popped_idx = 1
 
-# 선택된 100개의 숫자를 이진 탐색 트리에 입력, 임의로 루트노드는 500을 넣기로 한다. 
-head = Node(500)
-binary_tree = NodeMgmt(head)
-for num in bst_nums:
-  binary_tree.insert(num)
+    while self.move_down(popped_idx): # 이 부분 효율적으로 고쳐보기
+      left_child_popped_idx = popped_idx * 2
+      right_child_popped_idx = popped_idx * 2 + 1
 
-# 입력한 100개의 숫자 검색 (검색 기능 확인)
-for num in bst_nums:
-  if binary_tree.search(num) == False:
-    print('search failed',num)
+      # 왼쪽만 있는 경우
+      if right_child_popped_idx >= len(self.heap_array):
+        if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+          self.heap_array[left_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_popped_idx]
+          popped_idx = left_child_popped_idx    
 
-# 입력한 100개의 숫자 중 10개의 숫자를 랜덤 선택
-delete_nums = set()
-bst_nums = list(bst_nums)
-while len(delete_nums) != 10:
-  delete_nums.add(bst_nums[random.randint(0,99)])
+      # 모두 있는 경우
+      else:
+        if self.heap_array[left_child_popped_idx] > self.heap_array[right_child_popped_idx]:
+          if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+            self.heap_array[left_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_popped_idx]
+            popped_idx = left_child_popped_idx    
+        else:
+          if self.heap_array[right_child_popped_idx] > self.heap_array[popped_idx]:
+            self.heap_array[right_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[right_child_popped_idx]
+            popped_idx = right_child_popped_idx  
 
-# 선택한 10개의 숫자를 삭제 (삭제 기능 확인)
-for del_num in delete_nums:
-  if binary_tree.delete(del_num) == False:
-    print('delete failed', del_num)
+    return returned_data
+
+      
+heap = Heap(15)
+heap.insert(10)
+heap.insert(8)
+heap.insert(5)
+heap.insert(4)
+heap.insert(20)
+
+print(heap.heap_array)
+
+print(heap.pop())
+print(heap.heap_array)
+heap.pop()
+print(heap.heap_array)
+heap.pop()
+print(heap.heap_array)
+
