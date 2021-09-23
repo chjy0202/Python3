@@ -48,9 +48,78 @@ class Heap:
       parent_idx = inserted_idx // 2
       self.heap_array[parent_idx], self.heap_array[inserted_idx] = self.heap_array[inserted_idx], self.heap_array[parent_idx]
       inserted_idx = parent_idx  # 원래 노드가 부모 노드로 바꼈기 때문
-		
 
+    return True
 
+  # 삭제하는 코드
+  def move_down(self, popped_idx):
+    left_child_popped_idx = popped_idx * 2
+    right_child_popped_idx = popped_idx * 2 + 1
+    # 양쪽 모두 데이터가 있는 경우, 왼쪽만 있는 경우, 둘 다 없는 경우
+    # 둘다 없는 경우
+    if left_child_popped_idx >= len(self.heap_array):
+      return False
+    # 왼쪽만 있는 경우
+    elif right_child_popped_idx >= len(self.heap_array):
+      if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+        return True
+      else:
+        return False
+    # 모두 있는 경우
+    else:
+      if self.heap_array[left_child_popped_idx] > self.heap_array[right_child_popped_idx]:
+        if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+          return True
+        else:
+          return False
+      else:
+        if self.heap_array[right_child_popped_idx] > self.heap_array[popped_idx]:
+          return True
+        else:
+          return False
+
+    # if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+    #   self.heap_array[left_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_popped_idx]
+    #   popped_idx = left_child_popped_idx    
+    # elif self.heap_array[right_child_popped_idx] > self.heap_array[popped_idx]:
+    #   self.heap_array[right_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[right_child_popped_idx]
+    #   popped_idx = right_child_popped_idx  
+    # else:
+    #   return False
+
+  def pop(self):
+    if len(self.heap_array) <= 1:
+      return None
+
+    returned_data = self.heap_array[1] # 0은 비워놓고 1번으로 루트를 저장했기 때문에
+    self.heap_array[1] = self.heap_array[-1] # 마지막꺼 올려주기
+    del self.heap_array[-1]
+    popped_idx = 1
+
+    while self.move_down(popped_idx): # 이 부분 효율적으로 고쳐보기
+      left_child_popped_idx = popped_idx * 2
+      right_child_popped_idx = popped_idx * 2 + 1
+
+      # 왼쪽만 있는 경우
+      if right_child_popped_idx >= len(self.heap_array):
+        if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+          self.heap_array[left_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_popped_idx]
+          popped_idx = left_child_popped_idx    
+
+      # 모두 있는 경우
+      else:
+        if self.heap_array[left_child_popped_idx] > self.heap_array[right_child_popped_idx]:
+          if self.heap_array[left_child_popped_idx] > self.heap_array[popped_idx]:
+            self.heap_array[left_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_popped_idx]
+            popped_idx = left_child_popped_idx    
+        else:
+          if self.heap_array[right_child_popped_idx] > self.heap_array[popped_idx]:
+            self.heap_array[right_child_popped_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[right_child_popped_idx]
+            popped_idx = right_child_popped_idx  
+
+    return returned_data
+
+      
 heap = Heap(15)
 heap.insert(10)
 heap.insert(8)
@@ -59,3 +128,12 @@ heap.insert(4)
 heap.insert(20)
 
 print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+heap.pop()
+print(heap.heap_array)
+heap.pop()
+print(heap.heap_array)
+
+
+# 시간복잡도 O(logn)
