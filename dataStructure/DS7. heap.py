@@ -18,33 +18,44 @@
 # 오른쪽은 인덱스 번호 * 2 + 1
 
 class Heap:
-    def __init__(self, data):
-        self.heap_array = list()
-        self.heap_array.append(None)  # 편하게 처음인덱스를 0아니고 1로 하고 싶어서
-        self.heap_array.append(data)
+  def __init__(self, data):
+    self.heap_array = list()
+    self.heap_array.append(None)  # 편하게 처음인덱스를 0아니고 1로 하고 싶어서
+    self.heap_array.append(data)
 
-    def move_up(self, inserted_idx):
-        # 부모보다 커서 바꿔야 하는지 판단하는 method.
-        if inserted_idx <= 1:
-            return False
-        parent_idx = inserted_idx // 2
-        if self.heap_array[parent_idx] < self.heap_array[inserted_idx]:
-            return True
-        else:
-            return False
+  def move_up(self, inserted_idx):
+    # 부모보다 커서 바꿔야 하는지 판단하는 method.
+    if inserted_idx <= 1:
+      return False
+    parent_idx = inserted_idx // 2
+    if self.heap_array[parent_idx] < self.heap_array[inserted_idx]:
+      return True
+    else:
+      return False
 
-    def insert(self, data):
-        if len(self.heap_array) == 0:
-            self.heap_array.append(None)
-            self.heap_array.append(data)
-            return True
+  def insert(self, data):
+    if len(self.heap_array) == 0:
+      self.heap_array.append(None)
+      self.heap_array.append(data)
+      return True
 
-        self.heap_array.append(data)
-        # 들어간 노드가 상위 부모 노드보다 값이 클때
-        # 인덱스번호. 우리는 인덱스0은 none으로 두고 1부터 보고 있기 때문
-        inserted_idx = len(self.heap_array) - 1
+    self.heap_array.append(data)
+    # 들어간 노드가 상위 부모 노드보다 값이 클때
+    # 인덱스번호. 우리는 인덱스0은 none으로 두고 1부터 보고 있기 때문
+    inserted_idx = len(self.heap_array) - 1
 
-        while self.move_up(inserted_idx):
-            parent_idx = inserted_idx // 2
-            self.heap_array[parent_idx], self.heap_array[inserted_idx] = self.heap_array[inserted_idx], self.heap_array[parent_idx]
-            inserted_idx = parent_idx  # 원래 노드가 부모 노드로 바꼈기 때문
+    while self.move_up(inserted_idx):
+      parent_idx = inserted_idx // 2
+      self.heap_array[parent_idx], self.heap_array[inserted_idx] = self.heap_array[inserted_idx], self.heap_array[parent_idx]
+      inserted_idx = parent_idx  # 원래 노드가 부모 노드로 바꼈기 때문
+		
+
+
+heap = Heap(15)
+heap.insert(10)
+heap.insert(8)
+heap.insert(5)
+heap.insert(4)
+heap.insert(20)
+
+print(heap.heap_array)
