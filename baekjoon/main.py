@@ -351,5 +351,48 @@ print(a)
 
 # 3 memorization
 
+num = int(input())
+
+def fibo(num):
+    cache = [0 for _ in range(num+1)]
+    cache[0] = 0
+    cache[1] = 1
+
+    for idx in range(2,num+1):
+        cache[idx] = cache[idx-1] + cache[idx-2]
+    return cache[num]
+
+print(fibo(num))
 
 
+# 1074 다시보기
+
+def solve(n,x,y):
+    global result
+    if n == 2:
+        if x == X and y == Y:
+            print(result)
+            return
+        result += 1
+        if x == X and y+1 == Y:
+            print(result)
+            return
+        result += 1
+        if x+1 == X and y == Y:
+            print(result)
+            return
+        result += 1
+        if x+1 == X and y+1 == Y:
+            print(result)
+            return
+        result += 1
+        return
+    
+    solve(n/2, x, y)
+    solve(n/2, x, y+n/2)
+    solve(n/2, x+n/2, y)
+    solve(n/2, x+n/2, y+n/2)
+    
+result = 0
+N, X, Y = map(int, input().split())
+solve(2 ** N, 0, 0)
