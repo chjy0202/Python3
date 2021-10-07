@@ -12,7 +12,7 @@
 # 피보를 recursive로 만들고 이를 보완하는 다이나믹으로 수정해 보기
 def fibo(num):
 	if num <=1 :
-		return numㄷ
+		return num
 	return fibo(num-1) + fibo(num-2)
 
 # print(fibo(4))

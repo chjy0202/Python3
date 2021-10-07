@@ -174,3 +174,182 @@ for _ in range(case):
     # result = left_stack + list(reversed(right_stack)) 
     # print(''.join(result))
     
+
+# 4195 다시풀어보기
+
+def find(x):
+    if x == parent[x]:
+        return x
+    else:
+        p = find(parent[x])
+        parent[x] = p
+        return parent[x]
+
+def union(x,y):
+    x = find(x)
+    y = find(y)
+    
+    if x != y:
+        parent[y] = x
+        number[x] += number[y]
+    
+
+case = int(input())
+
+for _ in range(case):
+    parent = dict()
+    number = dict() #네트워크
+    
+    f = int(input())
+    
+    for _ in range(f):
+        x,y = input().split()
+        
+        if x not in parent:
+            parent[x] = x
+            number[x] = 1
+        if y not in parent:
+            parent[y] = y
+            number[y] = 1
+            
+        union(x,y)
+        print(number[find(x)])
+
+
+# 2750 정렬
+
+n = int(input())
+
+data = []
+for _ in range(n):
+    data.append(int(input()))
+for i in sorted(data):
+    print(i)
+
+# 1427
+# 1
+data = input()
+
+for i in range(9,-1,-1):
+    for j in data:
+        if int(j) == i:
+            print(i, end='')
+
+# 2
+string = input()
+
+data = []
+for i in string: # 문자열 스트링 반복문으로 한문자씩 가져오기
+    data.append(int(i))
+
+data.sort()
+data = list(reversed(data)) # 리 스 트 변경 무조건
+
+# print(''.join(data)) int형은 join 안됨?
+
+for i in data:
+    print(i,end='')
+
+
+# 10814
+case = int(input())
+
+data = []
+for _ in range(case):
+    input_data = input().split()
+    data.append((int(input_data[0]),input_data[1])) # 다시 튜플형으로. 숫자는 인트형으로. 
+    
+data.sort(key = lambda x : x[0])
+
+for i in data:
+    print(i[0], i[1])
+
+
+# 11650
+# 1
+case = int(input())
+
+data = []
+for _ in range(case):
+    input_data = input().split()
+    data.append((int(input_data[0]),int(input_data[1]))) # int로 제발 바꿔야 함!!
+    
+data.sort(key = lambda x: (x[0],x[1])) # 첫번째 값으로 정렬하고 똑같으면 2번쨰로 정렬하는 법
+
+for i in data:
+    print(i[0], i[1])
+
+# 2
+# 근데 파이썬은 사실 기본정렬이 "첫번째 값으로 정렬하고 똑같으면 2번쨰로 정렬하는 법" 이게 디폴트임
+# 그래서 key 없이 가능
+
+case = int(input())
+
+data = []
+for _ in range(case):
+    x,y = map(int,input().split()) 
+    data.append((x,y))
+
+data.sort()
+
+for i in data:
+    print(i[0], i[1])
+
+
+
+# 10989
+
+# 계수정렬
+# case수는 많고(10,000,000 이상) 수의범위는 제한이 될 때 사용하는 알고리즘
+# 배열의 인덱스를 데이터의 값으로 여긴다. 미리 크기를 선언해야 한다.
+# 데이터가 등장하는 횟수를 카운트 하는것
+# 인덱스의 값만큼 그 인덱스 숫자를 반복 출력한다
+
+# python 에서는 데이터의 갯수가 많을 때 sys.stdin.readline() 을 input()대신 사용한다.
+
+import sys
+
+case = int(sys.stdin.readline())
+array = [0] * 10001
+
+for _ in range(case):
+    data = int(sys.stdin.readline())
+    array[data] += 1
+    
+for idx in range(10001):
+    if array[idx] != 0:
+        for _ in range(array[idx]):
+            print(idx)
+
+
+
+# 2747
+# 재귀용법
+
+# 1 시간초과 생김
+num = int(input())
+
+def fibo(n):
+    if n == 0 or n == 1:
+        return n
+    elif n >= 2:
+        return fibo(n-1) + fibo(n-2)
+    
+print(fibo(num))
+
+# 2 반복문
+
+num = int(input())
+
+a,b = 0,1
+
+while num > 0:
+    a,b = b, a+b
+    num -= 1
+    
+print(a)
+
+# 3 memorization
+
+
+
