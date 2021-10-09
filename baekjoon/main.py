@@ -396,3 +396,104 @@ def solve(n,x,y):
 result = 0
 N, X, Y = map(int, input().split())
 solve(2 ** N, 0, 0)
+
+
+# 7490
+
+# 1543
+# 1
+data = input()
+check = input()
+
+i, count = 0,0
+
+while i < len(data):
+    if data[i:i+len(check)] == check:
+        count += 1
+        i += len(check)
+        continue
+    i += 1
+print(count)
+
+# 2
+data = input()
+check = input()
+
+i, count = 0,0
+
+while len(data) - i >= len(check):
+    if data[i:i+len(check)] == check: # 남은문자가 check문자의 길이보다 같거나 클때
+        count += 1
+        i += len(check)
+    else:
+        i += 1
+print(count)
+
+
+# 1568
+n = int(input())
+
+i, min = 1,0
+while n > 0:
+    if n >= i:
+        n -= i
+        i += 1
+        min += 1
+    else:
+        i = 1
+print(min)
+
+
+
+# 1302 딕셔너리를 이용한 탐색
+num = int(input())
+
+data = dict()
+for _ in range(num):
+    title = input()
+    if title not in data:
+        data[title] = 1
+    else:
+        data[title] += 1
+        
+# data.sort(reverse = True, key = lambda x: x.values)
+max_value = max(data.values())
+li = []
+
+for k,v in data.items():
+    if v == max_value:
+        li.append(k)
+li.sort()
+print(li[0])
+
+
+
+# 1668
+# 1
+num = int(input())
+
+data = []
+for _ in range(num):
+    data.append(int(input()))
+    
+left_count = 1
+right_count = 1
+
+left_value = data[0]
+right_value = data[-1]
+
+
+for i in range(1,len(data)):
+    if data[i] > left_value:
+        left_count += 1
+        left_value = data[i]
+
+for j in range(len(data)-2,-1,-1):
+    if data[j] > right_value:
+        right_count += 1
+        right_value = data[j]
+
+print(left_count, right_count, sep = '\n')
+
+
+
