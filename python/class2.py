@@ -16,10 +16,10 @@ class Car():
         self.type = tp
         self.color = color
 
-    def Show(self):
+    def show(self):
         return 'Car class "show Method!"'
 
-class BwmCar(Car): # Car class 를 상속받음
+class BmwCar(Car): # Car class 를 상속받음
     """Sub Class"""
     def __init__(self, car_name, tp, color): # 부모한테 넘길 tp 와 color 까지 받는다.
         super().__init__(tp, color) # 부모에게 넘겨줌
@@ -36,3 +36,23 @@ class BenzCar(Car): # Car class 를 상속받음
 
     def show_model(self):
         return "Your Car Name : %s" %self.car_name
+
+    def show(self):
+        print(super().show())
+        return "Car Color: %s" %self.color
+
+
+model1 = BmwCar('520d', 'sedan', 'red')
+print(model1.color) # red 부모클래스
+print(model1.car_name) # 520d 자식클래스
+print(model1.show())
+print(model1.__dict__) # {'type': 'sedan', 'color': 'red', 'car_name': '520d'}
+
+# Method Overriding (오버라이딩)
+model2 = BenzCar('220d', 'suv', 'black')
+print(model2.show()) # Car Color: black
+# 부모에 있는 메서드와 동일한 이름으로 메서드를 수정하여 생성하면 자식메서드가 먼저 호추룀. 
+# 덮어쓰기 된다. 
+
+# Parent Method Call
+# super().show() 해주면 부모메서드도 함께 출력이 된다. 
