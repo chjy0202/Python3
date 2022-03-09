@@ -56,3 +56,26 @@ print(model2.show()) # Car Color: black
 
 # Parent Method Call
 # super().show() 해주면 부모메서드도 함께 출력이 된다. 
+
+# 상속의 뎁스가 깊을 때
+# Inheritance Info
+print(BmwCar.mro())
+
+# 예제2
+# 다중 상속
+
+class X():
+    pass
+class Y():
+    pass
+class Z():
+    pass
+
+class A(X, Y):
+    pass
+class B(Y, Z):
+    pass
+class M(A, B, Z):
+    pass
+
+print(M.mro())
