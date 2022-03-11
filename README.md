@@ -5,6 +5,7 @@
 - 필수적인 자료구조를 학습합니다.
 ## python
 - 파이썬 문법 공부 및 TIL을 기록합니다.
+- [TIL 기록 velog](https://velog.io/@chjy0202)
 ## baekjoon
 - 백준 알고리즘 문제풀이 정리입니다.
 <br>
