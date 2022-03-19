@@ -5,13 +5,17 @@
 
 import random
 
+for idx in range(데이터길이 - 1):
+  for idx2 in range(idx + 1, 0, -1):
+    if 앞데이터 > 뒷데이터: 
+      swap
 
 def insertion_sort(data):
   for index in range(len(data) - 1):
     for index2 in range(index+1, 0, -1):
       if data[index2] < data[index2 - 1]:
         data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
-      else:
+      else: # 스왑이 일어나지 않으면 더이상 해당턴에서 비교 필요없음
         break
   return data
 

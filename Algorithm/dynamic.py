@@ -13,17 +13,18 @@
 def fibo(num):
 	if num <=1 :
 		return num
-	return fibo(num-1) + fibo(num-2)
+	return fibo(num - 1) + fibo(num - 2)
 
 # print(fibo(4))
 
 def fibo_dp(num):
-	cache = [0 for i in range(num+1)]
+	# 저장공간을 먼저 만들어야 한다.
+	cache = [0 for i in range(num + 1)]
 	cache[0] = 0
 	cache[1] = 1
 
-	for index in range(2, num+1):
-		cache[index] = cache[index-1] + cache[index-2]
+	for index in range(2, num + 1):
+		cache[index] = cache[index - 1] + cache[index - 2]
 	return cache[num]
 
 print(fibo_dp(10))
