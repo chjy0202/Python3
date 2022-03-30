@@ -13,10 +13,13 @@ def qsort(data):
   pivot = data[0]
 
   for i in range(1,len(data)):
+    # pivot 보다 작으면 왼쪽 리스트에 추가
     if pivot > data[i]:
       left.append(data[i])
+    # pivot 보다 크면 오른쪽 리스트에 추가
     else:
       right.append(data[i])
+  # 리스트끼리는 + 하기위해 [pivot] 으로 형변환
   return qsort(left) + [pivot] + qsort(right)
 
 # data_list = random.sample(range(100),10)
